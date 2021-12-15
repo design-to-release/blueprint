@@ -1,0 +1,23 @@
+@import url(./md.css);
+
+body {
+  width: 100vw;
+  height: 100vh;
+}
+
+nav > section:hover {
+  color: #0078d4;
+  background-color: #f3f2f1;
+}
+
+nav > section:hover svg {
+  fill: #0078d4;
+}
+
+nav span {
+  color: inherit;
+}
+
+.hidden {
+  display: none !important;
+}
