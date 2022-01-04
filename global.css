@@ -6,16 +6,7 @@ body {
 }
 
 nav > section:hover {
-  color: #0078d4;
   background-color: #f3f2f1;
-}
-
-nav > section:hover svg {
-  fill: #0078d4;
-}
-
-nav span {
-  color: inherit;
 }
 
 .hidden {

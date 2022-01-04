@@ -1,9 +1,9 @@
 <script lang="ts" context="module">
-  import type { TreeNodeOption } from "./node.svelte";
+  import type { NodeOption } from "./nodes.svelte";
 </script>
 
 <script lang="ts">
-  export let node: TreeNodeOption;
+  export let node: NodeOption;
 </script>
 
 {#if node}

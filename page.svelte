@@ -1,24 +1,27 @@
 <script lang="ts" context="module">
   import hljs from "highlight.js";
-  import type { TreeNodeOption } from "./node.svelte";
-  import Tree from "./tree.svelte";
+  import Nodes from "./nodes.svelte";
   // import Settings from './settings.svelte';
   import Creative from "./creative.svelte";
   import ButtonDecl from "./button";
 </script>
 
 <script lang="ts">
-  let rootNode = ButtonDecl;
-  let activeNode: TreeNodeOption;
+  let root = ButtonDecl;
   let variant: Record<string, unknown>;
   let prop: Record<string, unknown>;
 
-  $: previewText = JSON.stringify({ ...rootNode, variant, prop }, undefined, 2);
+  $: previewText = JSON.stringify({ ...root, variant, prop }, undefined, 2);
 </script>
 
 <section class="page">
-  <!-- Nodes tree view -->
-  <Tree bind:node={rootNode} bind:activeNode />
+  <!-- Nodes view -->
+  <section class="nodes">
+    <h1>{root.label} Nodes</h1>
+    <nav>
+      <Nodes bind:nodes={root.nodes} />
+    </nav>
+  </section>
 
   <!-- Preview -->
   <section class="preview">
@@ -56,14 +59,18 @@
   <Creative
     bind:variantSection={variant}
     bind:propSection={prop}
-    title={rootNode.label}
+    title={root.label}
   />
 </section>
 
-<style>
+<style scoped>
   .page {
     height: 100%;
     display: flex;
+  }
+
+  .nodes h1 {
+    text-align: center;
   }
 
   .preview {

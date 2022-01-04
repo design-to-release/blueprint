@@ -1,15 +1,9 @@
-interface Node {
-  label: string;
-  children: Node[];
-}
-
-const ButtonDecl: Node = {
+const ButtonDecl = {
   label: 'Button',
-  children: [
+  nodes: [
     {
-      label: 'Prefix Slot',
-      children: []
-    },
+      label: 'Prefix Slot'
+    }
   ]
 }
 
