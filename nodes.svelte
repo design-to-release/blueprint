@@ -23,8 +23,10 @@
     <section class="action">
       <span
         on:click={() => {
-          nodes.splice(i, 1);
-          nodes = nodes;
+          if (confirm(`您真的忍心删除 “${node.label}” 这个可爱的节点吗？`)) {
+            nodes.splice(i, 1);
+            nodes = nodes;
+          }
         }}
       >
         <svg

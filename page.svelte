@@ -17,7 +17,7 @@
 <section class="page">
   <!-- Nodes view -->
   <section class="nodes">
-    <h1>{root.label} Nodes</h1>
+    <h1>{root.label} 关键节点列表</h1>
     <nav>
       <Nodes bind:nodes={root.nodes} />
     </nav>
