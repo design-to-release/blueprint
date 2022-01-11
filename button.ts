@@ -1,10 +1,10 @@
 const ButtonDecl = {
-  label: 'Button',
+  label: "Button",
   nodes: [
     {
-      label: 'Prefix Slot'
-    }
-  ]
-}
+      label: "Prefix Slot",
+    },
+  ],
+};
 
 export default ButtonDecl;

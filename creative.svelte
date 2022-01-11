@@ -2,21 +2,18 @@
   import { marked } from "marked";
   import AddItem from "./add_item.svelte";
 
-  type List = Array<{
+  export type List = Array<{
     name: string;
     types: string[];
     defaultValue: string;
     desc: string;
   }>;
 
-  type CS = {
+  export type CS = {
     key: symbol;
     label: string;
     list: List;
   };
-
-  const VariantKey = Symbol("variant");
-  const PropKey = Symbol("prop");
 
   function wrapCodeValue(s: unknown): string {
     return `\`${s}\``;
@@ -45,50 +42,19 @@
 
 <script lang="ts">
   export let title: string;
+  export let variantSection: CS;
+  export let propSection: CS;
+
+  variantSection.key = Symbol("variant");
+  propSection.key = Symbol("prop");
 
   const whichPanelShowAddItem: Record<symbol, boolean> = {};
-
-  const creativeSections: CS[] = [
-    {
-      key: VariantKey,
-      label: "变体 Variants",
-      list: [
-        // {
-        //   name: "type",
-        //   types: ["default", "success", "info", "warning", "error"],
-        //   defaultValue: "default",
-        //   desc: "按钮的类型",
-        // },
-      ],
-    },
-    {
-      key: PropKey,
-      label: "数据 Props",
-      list: [],
-    },
-  ];
-
-  export let variantSection;
-  export let propSection;
-
-  $: for (const sec of creativeSections) {
-    switch (sec.key) {
-      case VariantKey: {
-        variantSection = sec;
-        break;
-      }
-      case PropKey: {
-        propSection = sec;
-        break;
-      }
-    }
-  }
 </script>
 
 <section class="container">
   <h3>{title}</h3>
 
-  {#each creativeSections as sec}
+  {#each [variantSection, propSection] as sec}
     <section>
       <h4>{sec.label}</h4>
       <section style="margin-bottom: 8px;">

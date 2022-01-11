@@ -1,9 +1,9 @@
-import { defineConfig } from 'tsup';
+import { defineConfig } from "tsup";
 
 export default defineConfig(({ watch }) => ({
-  format: ['esm'],
-  entry: ['main.js'],
-  target: 'esnext',
+  format: ["esm"],
+  entry: ["main.js", "preview.js"],
+  target: "esnext",
   clean: true,
-  minify: !watch
+  minify: !watch,
 }));

@@ -1,18 +1,51 @@
 <script lang="ts" context="module">
+  import type { CS as CreativeSection } from "./creative.svelte";
   import hljs from "highlight.js";
   import { Svg } from "./components";
   import Nodes from "./nodes.svelte";
-  // import Settings from './settings.svelte';
   import Creative from "./creative.svelte";
-  import ButtonDecl from "./button";
+
+  export interface Element {
+    label: string;
+    nodes: Array<{ label: string }>;
+    variant: CreativeSection;
+    prop: CreativeSection;
+  }
 </script>
 
 <script lang="ts">
-  let root = ButtonDecl;
-  let variant: Record<string, unknown>;
-  let prop: Record<string, unknown>;
+  let root = {
+    label: "Button",
+    nodes: [
+      {
+        label: "Prefix Slot",
+      },
+    ],
+    variant: {
+      label: "变体 Variants",
+      list: [],
+    } as CreativeSection,
+    prop: {
+      label: "数据 Props",
+      list: [],
+    } as CreativeSection,
+  };
 
-  $: previewText = JSON.stringify({ ...root, variant, prop }, undefined, 2);
+  const jsonString = new URL(location as any).searchParams.get("json");
+  if (jsonString) {
+    root = JSON.parse(jsonString);
+  }
+
+  let previewText: string;
+
+  $: if (root) {
+    previewText = JSON.stringify(root, undefined, 2);
+    history.pushState(
+      undefined,
+      "",
+      `/?json=${encodeURIComponent(previewText)}`
+    );
+  }
 </script>
 
 <section class="page">
@@ -31,24 +64,26 @@
         {@html hljs.highlightAuto(previewText).value}
       </code>
     </pre>
-    <div
-      class="svg"
-      on:click={() =>
-        navigator.clipboard.writeText(previewText).then(() => {
-          alert("复制成功");
-        })}
-    >
-      <Svg src={import("./assets/copy.svg")} />
-    </div>
+    <section class="svg-container">
+      <div
+        class="svg"
+        on:click={() =>
+          navigator.clipboard.writeText(previewText).then(() => {
+            alert("复制成功");
+          })}
+      >
+        <Svg src={import("./assets/copy.svg")} />
+      </div>
+      <a class="svg" href="./preview.html?json={encodeURIComponent(previewText)}" target="_blank">
+        <Svg src={import("./assets/preview.svg")} />
+      </a>
+    </section>
   </section>
-
-  <!-- Node editor -->
-  <!-- <Settings node={activeNode} /> -->
 
   <!-- Component drafting -->
   <Creative
-    bind:variantSection={variant}
-    bind:propSection={prop}
+    bind:variantSection={root.variant}
+    bind:propSection={root.prop}
     title={root.label}
   />
 </section>
@@ -78,14 +113,18 @@
     display: inherit;
   }
 
-  .preview > .svg {
+  .preview > .svg-container {
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
+
+  .preview > .svg-container > .svg {
+    display: block;
     border: 1px solid;
     border-radius: 6px;
     cursor: pointer;
     box-sizing: content-box;
-    position: absolute;
-    top: 0;
-    right: 0;
     padding: 8px;
     margin: 8px;
   }
