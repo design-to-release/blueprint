@@ -14,6 +14,7 @@
 </script>
 
 <script lang="ts">
+  console.log(location)
   let root = {
     label: "Button",
     nodes: [
@@ -43,7 +44,7 @@
     history.pushState(
       undefined,
       "",
-      `/?json=${encodeURIComponent(previewText)}`
+      `${location.pathname}?json=${encodeURIComponent(previewText)}`
     );
   }
 </script>
