@@ -1,5 +1,6 @@
 <script lang="ts" context="module">
   import { createEventDispatcher } from "svelte";
+  import { TagsInput } from "./compose_components";
   const TypeOptions = ["string", "boolean", "number"];
   let __componentIndex = 0;
 </script>
@@ -18,12 +19,10 @@
     name?: string;
     type?: string;
     isValueLimited?: boolean;
-    optionalValue?: string;
-    defaultValue?: string;
+    optionalValue?: any[];
+    defaultValue?: any[];
     desc?: string;
   } = {};
-
-  $: form.isValueLimited = !valueCannotLimited;
 </script>
 
 <section>
@@ -32,34 +31,42 @@
     <input type="text" bind:value={form.name} />
   </section>
   <section>
-    <section class="input-line">
-      <label>类型:</label>
-      <select
-        style="margin-right: 4px;"
-        on:change={(ev) => {
-          valueCannotLimited = ["boolean"].includes(ev.target.value);
-        }}
-        bind:value={form.type}
-      >
-        {#each TypeOptions as t}
-          <option value={t}>{t}</option>
-        {/each}
-      </select>
-      <input
-        disabled={valueCannotLimited}
-        bind:checked={form.isValueLimited}
-        type="checkbox"
-        id="isValueLimited{componentIndex}"
-      />
-      <label for="isValueLimited{componentIndex}">是否限定值</label>
+    <section class="input-line" style="justify-content: space-between;">
+      <section>
+        <input
+          disabled={valueCannotLimited}
+          bind:checked={form.isValueLimited}
+          type="checkbox"
+          id="isValueLimited{componentIndex}"
+        />
+        <label for="isValueLimited{componentIndex}">是否限定值</label>
+      </section>
+      <section class:hidden={form.isValueLimited}>
+        <label>类型:</label>
+        <select
+          style="margin-right: 4px;"
+          on:change={(ev) => {
+            valueCannotLimited = ["boolean"].includes(ev.target.value);
+
+            if (valueCannotLimited === false) {
+              form.isValueLimited = false;
+            }
+          }}
+          bind:value={form.type}
+        >
+          {#each TypeOptions as t}
+            <option value={t}>{t}</option>
+          {/each}
+        </select>
+      </section>
     </section>
     <section class:hidden={!form.isValueLimited} class="input-line">
       <label>可选值:</label>
-      <input type="text" bind:value={form.optionalValue} />
+      <TagsInput bind:tags={form.optionalValue} />
     </section>
     <section class="input-line">
       <label>默认值:</label>
-      <input type="text" bind:value={form.defaultValue} />
+      <TagsInput bind:tags={form.defaultValue} maxLength={1} />
     </section>
     <section class="input-line">
       <label>说明:</label>
@@ -86,8 +93,8 @@
 
         dispatch("confirm", {
           name,
-          types: isValueLimited ? optionalValue.split(/\s+/) : [type],
-          defaultValue,
+          types: isValueLimited ? optionalValue : [type],
+          defaultValue: defaultValue[0],
           desc,
         });
       }}>确认</button

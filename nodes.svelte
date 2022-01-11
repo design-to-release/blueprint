@@ -1,4 +1,5 @@
 <script lang="ts" context="module">
+  import { Svg } from "./components";
   export interface NodeOption {
     label: string;
 
@@ -29,15 +30,7 @@
           }
         }}
       >
-        <svg
-          class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiBox-root css-uqopch"
-          focusable="false"
-          aria-hidden="true"
-          viewBox="0 0 24 24"
-          data-testid="HorizontalRuleIcon"
-        >
-          <path fill-rule="evenodd" d="M4 11h16v2H4z" />
-        </svg>
+        <Svg src={import("./assets/remove.svg")} />
       </span>
       <span
         on:click={() => {
@@ -47,15 +40,7 @@
           nodes = nodes;
         }}
       >
-        <svg
-          class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiBox-root css-uqopch"
-          focusable="false"
-          aria-hidden="true"
-          viewBox="0 0 24 24"
-          data-testid="AddIcon"
-        >
-          <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
-        </svg>
+        <Svg src={import("./assets/add.svg")} />
       </span>
     </section>
   </section>
@@ -76,6 +61,7 @@
     border: 1px solid;
     border-radius: 50%;
     margin-right: 4px;
+    cursor: pointer;
   }
 
   .node span:hover {

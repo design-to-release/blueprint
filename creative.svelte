@@ -19,10 +19,6 @@
   const PropKey = Symbol("prop");
 
   function wrapCodeValue(s: unknown): string {
-    if (typeof s === "string") {
-      s = `'${s}'`;
-    }
-
     return `\`${s}\``;
   }
 
