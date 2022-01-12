@@ -24,7 +24,7 @@ jobs:
       - run: pnpm build
       - run: |
           mkdir ghpage
-          cp -r index.html dist ghpage
+          cp -r index.html preview.html dist ghpage
       - if: github.event_name == 'push'
         uses: peaceiris/actions-gh-pages@v3
         with:
