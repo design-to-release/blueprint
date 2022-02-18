@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import type { Component } from "@/types/component";
+import { ref, watch } from "vue";
 import { NH1, NTabs, NTabPane, NInput } from "naive-ui";
 import AppProposal from "./Proposal.vue";
 import AppDesign from "./Design.vue";
 import AppCode from "./Code.vue";
 import SwitchableEditableText from "./_internal/SwitchableEditableText.vue";
-defineProps<{ component: Component }>();
+const props = defineProps<{ component: Component }>();
 
 type Step = "proposal" | "design" | "code";
 type Status = "wait" | "error" | "finish" | "process";
@@ -27,6 +28,15 @@ const tabs: Array<{ step: Step; title: string; status: Status }> = [
         status: "finish",
     },
 ];
+
+const $componentDesc = ref(props.component.desc);
+
+watch(
+    () => props.component.id,
+    () => {
+        $componentDesc.value = props.component.desc;
+    }
+);
 </script>
 
 <template>
@@ -36,8 +46,8 @@ const tabs: Array<{ step: Step; title: string; status: Status }> = [
         :input-props="{
             type: 'textarea',
         }"
-        :value="component.desc"
-        :on-update-value="(v) => (component.desc = v)"
+        :value="$componentDesc"
+        :on-update-value="(v) => ($componentDesc = v)"
     />
 
     <n-tabs type="line">

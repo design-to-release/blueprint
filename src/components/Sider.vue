@@ -61,6 +61,7 @@ onMounted(() => {
         .then((groups: Group[]) => {
             const selectTreeOptions = toSelectTreeOptions(groups);
             $groupsComponentsTree.value = toComponentsTreeOptions(groups);
+            //eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             $selectExpandKeys.value = selectTreeOptions?.map((i) => i.key!);
             $groupsSelectTree.value = selectTreeOptions;
         });

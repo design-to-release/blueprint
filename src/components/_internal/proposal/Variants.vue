@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { RowKey } from "naive-ui/lib/data-table/src/interface";
 import type { ComponentVariants, ComponentProperty } from "@/types/component";
-import { ref, h, watchEffect } from "vue";
+import { ref, h, watchEffect, watch } from "vue";
 import { NCard, NDataTable, NSpace, NButton } from "naive-ui";
 import EditableTable from "../EditableTable.vue";
 const props = defineProps<{
@@ -9,21 +9,24 @@ const props = defineProps<{
     variants: ComponentVariants;
 }>();
 
+const $variants = ref(props.variants);
+
 const $oldVariants = ref<ComponentVariants>([]);
 const $variantsEdited = ref(false);
 const $checkedVariants = ref<RowKey[]>([]);
 
-watchEffect(() => {
-    // trigger update
-    props.componentId;
-
-    $variantsEdited.value = false;
-    $checkedVariants.value = [];
-});
+watch(
+    () => props.componentId,
+    () => {
+        $variants.value = props.variants;
+        $variantsEdited.value = false;
+        $checkedVariants.value = [];
+    }
+);
 
 watchEffect(() => {
     if ($variantsEdited.value === false) {
-        $oldVariants.value = [...props.variants];
+        $oldVariants.value = [...$variants.value];
     }
 });
 
@@ -43,7 +46,7 @@ function createPropertyColumn(title: string, key: keyof ComponentProperty) {
                 value: data[key],
                 onUpdateValue(v) {
                     $variantsEdited.value = true;
-                    props.variants[index][key] = v;
+                    $variants.value[index][key] = v;
                 },
             }),
     };
@@ -52,7 +55,7 @@ function createPropertyColumn(title: string, key: keyof ComponentProperty) {
 function saveVariants() {
     fetch(`/api/components/${props.componentId}`, {
         method: "PATCH",
-        body: JSON.stringify({ variants: props.variants }),
+        body: JSON.stringify({ variants: $variants.value }),
         headers: {
             "Content-Type": "application/json",
         },
@@ -81,7 +84,7 @@ const variantsTitle: Array<{ title: string; key: keyof ComponentProperty }> = [
                     createPropertyColumn(i.title, i.key)
                 ),
             ]"
-            :data="variants"
+            :data="$variants"
             :row-key="(row) => row.name"
             :checked-row-keys="$checkedVariants"
             @update:checked-row-keys="(rowKeys) => ($checkedVariants = rowKeys)"
@@ -92,7 +95,7 @@ const variantsTitle: Array<{ title: string; key: keyof ComponentProperty }> = [
                     <n-button
                         type="primary"
                         @click="
-                            variants = [...variants, { ...emptyProperty }];
+                            $variants = [...$variants, { ...emptyProperty }];
                             $variantsEdited = true;
                         "
                         >增加一行</n-button
@@ -103,7 +106,7 @@ const variantsTitle: Array<{ title: string; key: keyof ComponentProperty }> = [
                         @click="
                             () => {
                                 $variantsEdited = true;
-                                variants = variants.filter(
+                                $variants = $variants.filter(
                                     (i) => !$checkedVariants.includes(i.name)
                                 );
                                 $checkedVariants = [];
@@ -115,7 +118,7 @@ const variantsTitle: Array<{ title: string; key: keyof ComponentProperty }> = [
                 <n-space v-if="$variantsEdited">
                     <n-button
                         @click="
-                            variants = [...$oldVariants];
+                            $variants = [...$oldVariants];
                             $variantsEdited = false;
                         "
                         >取消</n-button

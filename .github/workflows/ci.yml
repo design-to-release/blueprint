@@ -3,22 +3,23 @@ name: ci
 on: [push, pull_request]
 
 jobs:
-  build:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest]
-        node: [16.x]
+    build:
+        runs-on: ${{ matrix.os }}
+        strategy:
+            matrix:
+                os: [ubuntu-latest]
+                node: [16.x]
 
-    steps:
-      - uses: actions/checkout@v2
-      - uses: pnpm/action-setup@v2.0.1
-        with:
-          version: 6.31
-          run_install: true
-      - uses: actions/setup-node@v2
-        with:
-          node-version: ${{ matrix.node }}
-          cache: "pnpm"
+        steps:
+            - uses: actions/checkout@v2
+            - uses: pnpm/action-setup@v2.0.1
+              with:
+                  version: 6.31
+                  run_install: true
+            - uses: actions/setup-node@v2
+              with:
+                  node-version: ${{ matrix.node }}
+                  cache: "pnpm"
 
-      - run: pnpm build
+            - run: pnpm lint
+            - run: pnpm build

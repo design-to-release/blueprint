@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { RowKey } from "naive-ui/lib/data-table/src/interface";
 import type { ComponentProperties, ComponentProperty } from "@/types/component";
-import { ref, h, watchEffect } from "vue";
+import { ref, h, watchEffect, watch } from "vue";
 import { NCard, NDataTable, NSpace, NButton } from "naive-ui";
 import EditableTable from "../EditableTable.vue";
 const props = defineProps<{
@@ -9,21 +9,24 @@ const props = defineProps<{
     properties: ComponentProperties;
 }>();
 
+const $properties = ref(props.properties);
+
 const $oldProperties = ref<ComponentProperties>([]);
 const $propertiesEdited = ref(false);
 const $checkedProperties = ref<RowKey[]>([]);
 
-watchEffect(() => {
-    // trigger update
-    props.componentId;
-
-    $propertiesEdited.value = false;
-    $checkedProperties.value = [];
-});
+watch(
+    () => props.componentId,
+    () => {
+        $properties.value = props.properties;
+        $propertiesEdited.value = false;
+        $checkedProperties.value = [];
+    }
+);
 
 watchEffect(() => {
     if ($propertiesEdited.value === false) {
-        $oldProperties.value = [...props.properties];
+        $oldProperties.value = [...$properties.value];
     }
 });
 
@@ -43,7 +46,7 @@ function createPropertyColumn(title: string, key: keyof ComponentProperty) {
                 value: data[key],
                 onUpdateValue(v) {
                     $propertiesEdited.value = true;
-                    props.properties[index][key] = v;
+                    $properties.value[index][key] = v;
                 },
             }),
     };
@@ -52,7 +55,7 @@ function createPropertyColumn(title: string, key: keyof ComponentProperty) {
 function saveProperties() {
     fetch(`/api/components/${props.componentId}`, {
         method: "PATCH",
-        body: JSON.stringify({ properties: props.properties }),
+        body: JSON.stringify({ properties: $properties.value }),
         headers: {
             "Content-Type": "application/json",
         },
@@ -82,7 +85,7 @@ const propertiesTitle: Array<{ title: string; key: keyof ComponentProperty }> =
                     createPropertyColumn(i.title, i.key)
                 ),
             ]"
-            :data="properties"
+            :data="$properties"
             :row-key="(row) => row.name"
             :checked-row-keys="$checkedProperties"
             @update:checked-row-keys="
@@ -95,7 +98,10 @@ const propertiesTitle: Array<{ title: string; key: keyof ComponentProperty }> =
                     <n-button
                         type="primary"
                         @click="
-                            properties = [...properties, { ...emptyProperty }];
+                            $properties = [
+                                ...$properties,
+                                { ...emptyProperty },
+                            ];
                             $propertiesEdited = true;
                         "
                         >增加一行</n-button
@@ -106,7 +112,7 @@ const propertiesTitle: Array<{ title: string; key: keyof ComponentProperty }> =
                         @click="
                             () => {
                                 $propertiesEdited = true;
-                                properties = properties.filter(
+                                $properties = $properties.filter(
                                     (i) => !$checkedProperties.includes(i.name)
                                 );
                                 $checkedProperties = [];
@@ -118,7 +124,7 @@ const propertiesTitle: Array<{ title: string; key: keyof ComponentProperty }> =
                 <n-space v-if="$propertiesEdited">
                     <n-button
                         @click="
-                            properties = [...$oldProperties];
+                            $properties = [...$oldProperties];
                             $propertiesEdited = false;
                         "
                         >取消</n-button
