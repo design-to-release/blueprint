@@ -1,6 +1,6 @@
 # Blueprint
 
-[![Build Status](https://github.com/design-to-release/blueprint/workflows/ci/badge.svg?branch=master)](https://github.com/design-to-release/blueprint/actions)
+[![Build Status](https://github.com/design-to-release/blueprint/workflows/ci/badge.svg?branch=main)](https://github.com/design-to-release/blueprint/actions)
 [![license](https://img.shields.io/github/license/design-to-release/blueprint.svg)](https://github.com/design-to-release/blueprint)
 
 ## 背景
