@@ -1,0 +1,25 @@
+[
+    {
+        "id": "meg",
+        "name": "MEG",
+        "children": [
+            {
+                "id": "meg_feed",
+                "name": "Feed",
+                "components": [
+                    "Button"
+                ]
+            },
+            {
+                "id": "meg_search",
+                "name": "Search",
+                "components": [
+                    "Button"
+                ]
+            }
+        ],
+        "components": [
+            "Button"
+        ]
+    }
+]

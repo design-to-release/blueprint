@@ -1,0 +1,25 @@
+body {
+    overflow: hidden;
+    --header-height: 64px;
+}
+
+#app {
+    height: 100vh;
+    position: relative;
+}
+
+.flex {
+    display: flex;
+}
+
+.align-center {
+    align-items: center;
+}
+
+.justify-center {
+    justify-content: center;
+}
+
+.relative {
+    position: relative;
+}
